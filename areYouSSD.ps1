@@ -2,14 +2,14 @@
 # The script works as followed --> preferably ssd, the bigger the best if no ssd use biggest hdd 
 # Does nothing on it's own, must be used with something else like Microsoft Deployment Toolkit
 
-$disks = Get-WmiObject -Class MSFT_PhysicalDisk -Namespace root\Microsoft\Windows\Storage | select-object deviceId, mediaType, Size # Class to use disks properties
-$nbDisk = (get-disk | Where-Object { $_.Size -lt 100000GB }).Number.Count # Returns the number of disks : integer
-$maxDiskSize = 0 # Tracks max disk size through the code
+$disks = Get-WmiObject -Class MSFT_PhysicalDisk -Namespace root\Microsoft\Windows\Storage | select-object deviceId, mediaType, Size # Check disks properties
+$nbDisk = (get-disk | Where-Object { $_.Size -lt 100000GB }).Number.Count # Returns the number of disks : integer ## The disk number comes from BIOS order
+$maxDiskSize = 0
 $i = -1
 $c = -1
 $ssdList = New-Object 'object[,]' $nbDisk, 3 # Array to track ssd caracteristics
 $hddList = New-Object 'object[,]' $nbDisk, 3 # Array to track hdd caracteristics
-$ssd = $false
+$ssd = $false # Boolean to track presence of SSDs on the system
 
 foreach($disk in $disks)
 {
@@ -61,13 +61,13 @@ else
             {
                 $maxDiskSize = $hddList[$c,1] # Determine max disk capacity
                 $goodDisk = $hddList[$c,0] # Used to select wich disk will be set as "best"
-                Write-Host "The best hdd option is the disk number $goodDisk"
+                Write-Host "The best hdd option is the disk number $goodDisk" # This line may be commented it's here for logging only
             }
         }
     }
 }
 
 Write-host "best disk size : " $maxDiskSize
-# Write-Host $ssdList
-# Write-Host $hddList
+# Write-Host $ssdList ## Again this is for debug
+# Write-Host $hddList ## Same as previous line
 return $goodDisk
