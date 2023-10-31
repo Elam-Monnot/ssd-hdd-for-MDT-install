@@ -1,4 +1,4 @@
-﻿# This script is intended to determine on wich disk your Windows OS should be installed
+# This script is intended to determine on wich disk your Windows OS should be installed
 # The script works as followed --> preferably ssd, the bigger the best if no ssd use biggest hdd 
 # Does nothing on it's own, must be used with something else like Microsoft Deployment Toolkit
 
@@ -32,7 +32,6 @@ if($nbDisk -eq 1)
 {
     $goodDisk = $disks.deviceI
     $maxDiskSize = $disks.Size
-    # write-host "log : disk eq 1" ## Used for debug purposes
 }
 else
 {
@@ -46,7 +45,6 @@ else
                 {
                     $maxDiskSize = $ssdList[$i,1] # Determine max disk capacity
                     $goodDisk = $ssdList[$i,0] # Used to select wich disk will be set as "best"
-                    # Write-Host "log : ssd -eq True" ## Used for debug purposes
                 }
         }
         Write-Host "The best ssd option is the disk number $goodDisk"
@@ -61,13 +59,13 @@ else
             {
                 $maxDiskSize = $hddList[$c,1] # Determine max disk capacity
                 $goodDisk = $hddList[$c,0] # Used to select wich disk will be set as "best"
-                Write-Host "The best hdd option is the disk number $goodDisk" # This line may be commented it's here for logging only
+                Write-Host "The best hdd option is the disk number $goodDisk" # <-- This line may be commented it's here for logging only
             }
         }
     }
 }
 
-Write-host "best disk size : " $maxDiskSize
-# Write-Host $ssdList ## Again this is for debug
-# Write-Host $hddList ## Same as previous line
-return $goodDisk
+Write-host "best disk size : " $maxDiskSize # <-- Can be commented, used for debug purposes
+return $goodDisk # Bios order of the disk
+# The script could be adjusted to return an array containing the good disk and it's size with $maxDiskSize
+[gc]::Collect()
